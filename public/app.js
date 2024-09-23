@@ -8,10 +8,10 @@ function createEmployeeCard(obj) {
     titleDiv.classList.add('title');
 
     const titleName = document.createElement('p');
-    titleName.innerText = 'employeeName';
+    titleName.innerText = 'Employee Name';
 
     const titleId = document.createElement('p');
-    titleId.innerText = 'Emp_id';
+    titleId.innerText = 'Emp id';
 
     const titleAvailable = document.createElement('p');
     titleAvailable.innerText = 'Available';
@@ -45,9 +45,26 @@ function createEmployeeCard(obj) {
     changeButton.innerText = 'change status';
 
     // Optional: Add event listener for the button (for example, to change status)
-    // changeButton.addEventListener('click', () => {
-    //     dataAvailable.innerText = (available = !available); // Toggle availability
-    // });
+    changeButton.addEventListener('click', () => {
+        const id = obj.emp_id;
+        const status = obj.available;
+
+
+        fetch("http://localhost:3000/change_status",{
+            method:"PUT",
+            body:JSON.stringify({
+                emp_id:id,
+                status:status
+            }),
+            headers:{
+                "content-type":"application/json"
+            }
+        })
+        .then(()=>{
+            window.location.reload();
+        })
+        
+    });
 
     // Append everything to the card div
     cardDiv.appendChild(titleDiv);
@@ -69,7 +86,7 @@ button.addEventListener("click",()=>{
     // console.log(status);
 
     
-fetch("http://172.19.224.109:3000/add_data",{
+fetch("http://localhost:3000/add_data",{
     method:"POST",
     body:JSON.stringify({
         employeeName:name,
@@ -93,7 +110,7 @@ fetch("http://172.19.224.109:3000/add_data",{
 function createCards(){
     const container = document.getElementById('container');
 
-    fetch('http://172.19.224.109:3000/employee_data')
+    fetch('http://localhost:3000/employee_data')
     .then((data)=>{
        data.json()
         .then((obj)=>{

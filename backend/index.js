@@ -40,7 +40,20 @@ app.post('/add_data', async (req, res) => {
 app.put('/change_status',async (req, res) => {
     const data = await req.body;
 
-    const valid = checkNumber.safeParse(data);
+    const status = data.status;
+
+    if(status==true){
+        const valid = checkNumber.safeParse(data);
+    if (!valid.success) {
+        res.status(411).json({
+            msg: "You sent a wrong inputs"
+        });
+    }
+
+    await employee.updateOne({emp_id:data.emp_id},{available:false});
+    }
+    else{
+        const valid = checkNumber.safeParse(data);
     if (!valid.success) {
         res.status(411).json({
             msg: "You sent a wrong inputs"
@@ -48,6 +61,9 @@ app.put('/change_status',async (req, res) => {
     }
 
     await employee.updateOne({emp_id:data.emp_id},{available:true});
+    }
+
+    
 
 
 });
@@ -55,6 +71,6 @@ app.put('/change_status',async (req, res) => {
 
 
 
-app.listen(3000,'0.0.0.0', () => {
+app.listen(3000,() => {
     console.log("Your websie is live on http://localhost:3000");
 })
